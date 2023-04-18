@@ -1,10 +1,11 @@
 const express =require("express")
+require("dotenv").config()
 const mongoose=require("mongoose")
 const  bodyParser = require('body-parser')
 const port=3008;
 const cors=require("cors")
 const app=express()
-
+console.log()
 app.use(express.json())
 app.use(cors())
 const uri="mongodb+srv://iamsrinath5255:srinath5255@cluster0.vztzmdl.mongodb.net/?retryWrites=true&w=majority"
@@ -45,7 +46,7 @@ connectDb()
   
     const client = new PineconeClient();
     await client.init({
-    apiKey: "4e6466bc-5e9b-4a7f-bfa6-e95c18711d7e",
+    apiKey:process.env.PINECONE_API_KEY,
     environment: "us-west4-gcp",
     });
 
@@ -53,14 +54,15 @@ connectDb()
     console.log("client creation done")
  
 
-await PineconeStore.fromTexts( [output], new OpenAIEmbeddings          ({openAIApiKey:"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"}),{pineconeIndex,});
+
+await PineconeStore.fromTexts( output, new OpenAIEmbeddings({openAIApiKey:process.env.OPENAI_API_KEY}),{pineconeIndex,});
 console.log("after pineconestore creation")
 
 
 
 //    const vectorStore = await PineconeStore.fromExistingIndex(new OpenAIEmbeddings({openAIApiKey:"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"}),{pineconeIndex});
   
-//     const model = new OpenAI({ openAIApiKey: "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", temperature: 0.9 });   
+//     const model = new OpenAI({ openAIApiKey:process.env.OPENAI_API_KEY, temperature: 0.9 });   
 //     const chain = VectorDBQAChain.fromLLM(model, vectorStore, {k: 1,returnSourceDocuments: true,});
 //     const response = await chain.call({ query: question });
 
